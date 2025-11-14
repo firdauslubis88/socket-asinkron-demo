@@ -37,7 +37,7 @@ set LDFLAGS=-lws2_32
 
 REM Build counter
 set /a COUNT=0
-set /a TOTAL=6
+set /a TOTAL=8
 
 REM TCP Examples
 set /a COUNT+=1
@@ -78,6 +78,19 @@ g++ %CXXFLAGS% src\async\async_tcp_client.cpp -o bin\async_client.exe %LDFLAGS%
 if errorlevel 1 goto :error
 echo   [OK] bin\async_client.exe
 
+REM Chat Demo
+set /a COUNT+=1
+echo [%COUNT%/%TOTAL%] Building Chat Server...
+g++ %CXXFLAGS% src\examples\chat_demo\chat_server.cpp -o bin\chat_server.exe %LDFLAGS%
+if errorlevel 1 goto :error
+echo   [OK] bin\chat_server.exe
+
+set /a COUNT+=1
+echo [%COUNT%/%TOTAL%] Building Chat Client...
+g++ %CXXFLAGS% src\examples\chat_demo\chat_client.cpp -o bin\chat_client.exe %LDFLAGS%
+if errorlevel 1 goto :error
+echo   [OK] bin\chat_client.exe
+
 echo.
 echo ========================================
 echo Build completed successfully!
@@ -95,6 +108,9 @@ echo          bin\udp_client.exe
 echo.
 echo   Async: bin\async_server.exe
 echo          bin\async_client.exe
+echo.
+echo   Chat:  bin\chat_server.exe (run first)
+echo          bin\chat_client.exe (run multiple instances!)
 echo.
 goto :end
 
