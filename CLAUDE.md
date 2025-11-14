@@ -3,48 +3,129 @@
 ## Project Overview
 
 **Repository**: socket-asinkron-demo
-**Purpose**: Demonstration project for asynchronous socket programming
-**Status**: Initial setup phase
+**Purpose**: Demo program C++ untuk pembelajaran socket programming (TCP/UDP) dan proses asinkron
+**Target Audience**: Mahasiswa Teknik Elektro Tahun 2, Fakultas Teknik Universitas Indonesia
+**Duration**: 1 sesi perkuliahan (150 menit) - sifatnya pengenalan praktis tanpa latihan
 **Last Updated**: 2025-11-14
 
-This repository serves as a demonstration and educational resource for asynchronous socket communication patterns. The project showcases various socket programming techniques including client-server architecture, real-time bidirectional communication, and event-driven programming.
+### Konteks Proyek
+
+Ini adalah program demo sederhana yang memberikan pengantar praktis tentang:
+- Socket programming (TCP dan UDP) menggunakan C++
+- Proses asinkron (non-blocking I/O)
+- Format JSON untuk pertukaran data
+- Praktik client-server communication
+
+**Background Mahasiswa**:
+- Telah mempelajari: C dasar (I/O, variabel, control flow, fungsi, array, pointer, file/JSON, linked list, searching, sorting)
+- Telah mempelajari: OOP (abstraksi, enkapsulasi, pewarisan, polymorphism)
+- **Belum** mempelajari: OSI layer secara mendalam
+- Pendekatan: **Praktis** dan hands-on, bukan teoritis
 
 ---
 
 ## Repository Structure
 
-### Current State
-This is a freshly initialized repository. The following structure is recommended for development:
-
 ```
 socket-asinkron-demo/
-├── src/                    # Source code
-│   ├── server/            # Server-side implementation
-│   ├── client/            # Client-side implementation
-│   └── shared/            # Shared utilities and types
-├── examples/              # Example implementations
-├── tests/                 # Test files
-├── docs/                  # Additional documentation
-├── package.json           # Node.js dependencies (if using Node.js)
-├── README.md              # Project documentation
-├── .gitignore            # Git ignore rules
-└── CLAUDE.md             # This file
+├── src/
+│   ├── tcp/                    # Implementasi TCP
+│   │   ├── tcp_server.cpp      # Server TCP sederhana
+│   │   └── tcp_client.cpp      # Client TCP sederhana
+│   ├── udp/                    # Implementasi UDP
+│   │   ├── udp_server.cpp      # Server UDP sederhana
+│   │   └── udp_client.cpp      # Client UDP sederhana
+│   ├── async/                  # Contoh proses asinkron
+│   │   ├── async_tcp_server.cpp
+│   │   └── async_tcp_client.cpp
+│   ├── utils/                  # Utilitas umum
+│   │   ├── json_helper.hpp     # Helper untuk JSON parsing
+│   │   └── socket_utils.hpp    # Helper socket utilities
+│   └── examples/               # Contoh lengkap kombinasi
+│       └── chat_demo/          # Demo aplikasi chat sederhana
+├── include/                    # Header files
+├── lib/                        # Third-party libraries (nlohmann/json)
+├── build/                      # Build output (ignored by git)
+├── docs/                       # Dokumentasi tambahan
+│   ├── penjelasan-tcp.md       # Penjelasan TCP untuk mahasiswa
+│   ├── penjelasan-udp.md       # Penjelasan UDP untuk mahasiswa
+│   └── penjelasan-async.md     # Penjelasan proses asinkron
+├── Makefile                    # Build configuration
+├── CMakeLists.txt             # CMake configuration (optional)
+├── README.md                   # Dokumentasi utama
+├── .gitignore                 # Git ignore rules
+└── CLAUDE.md                  # File ini
 ```
 
-### Recommended Technology Stack
+---
 
-Based on common socket programming patterns, consider:
+## Technology Stack
 
-**Backend Options**:
-- Node.js + Socket.IO (WebSocket abstraction)
-- Node.js + ws (native WebSocket library)
-- Python + asyncio + websockets
-- Go with gorilla/websocket
+### Core Technologies
+- **Language**: C++11 atau lebih baru (untuk fitur modern seperti `std::thread`, `std::async`)
+- **Socket API**: **Winsock2** (Windows) - Primary target platform
+- **JSON Library**: [nlohmann/json](https://github.com/nlohmann/json) - single header, mudah digunakan
+- **Build System**: MinGW/MSVC untuk Windows, atau CMake (cross-platform)
+- **Compiler**: MinGW g++ atau MSVC (Visual Studio)
 
-**Frontend Options** (if web-based):
-- Vanilla JavaScript
-- React/Vue/Svelte with Socket.IO client
-- TypeScript for type safety
+### Key Libraries
+
+#### Windows (Winsock2)
+```cpp
+// Windows-specific headers
+#include <winsock2.h>      // Winsock2 API
+#include <ws2tcpip.h>      // Additional TCP/IP functions
+#pragma comment(lib, "ws2_32.lib")  // Link dengan Winsock library
+
+// Standard C++ libraries
+#include <thread>          // Multi-threading
+#include <future>          // std::async, std::future
+#include <chrono>          // Time utilities
+#include <iostream>        // I/O
+#include <string>          // String handling
+#include <vector>          // Dynamic arrays
+
+// Third-party
+#include "json.hpp"        // nlohmann/json
+```
+
+#### Linux/Unix (untuk referensi)
+```cpp
+// POSIX headers (jika develop di Linux)
+#include <sys/socket.h>    // Socket programming
+#include <netinet/in.h>    // Internet address family
+#include <arpa/inet.h>     // inet_ntoa, inet_addr
+#include <unistd.h>        // close()
+#include <fcntl.h>         // fcntl() untuk non-blocking
+```
+
+### Platform Compatibility Layer
+
+Untuk memudahkan cross-platform development:
+
+```cpp
+// socket_compat.hpp - Compatibility layer
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+
+    typedef int socklen_t;
+    #define CLOSE_SOCKET closesocket
+    #define GET_ERROR WSAGetLastError()
+#else
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+
+    typedef int SOCKET;
+    #define INVALID_SOCKET -1
+    #define SOCKET_ERROR -1
+    #define CLOSE_SOCKET close
+    #define GET_ERROR errno
+#endif
+```
 
 ---
 
@@ -52,14 +133,14 @@ Based on common socket programming patterns, consider:
 
 ### Git Branching Strategy
 
-1. **Main Branch**: `main` or `master` - production-ready code
-2. **Development Branch**: `develop` - integration branch
-3. **Feature Branches**: `feature/feature-name` - specific features
+1. **Main Branch**: `main` - kode stabil dan siap presentasi
+2. **Development Branch**: `develop` - integrasi fitur baru
+3. **Feature Branches**: `feature/nama-fitur` - pengembangan fitur spesifik
 4. **Claude Branches**: `claude/claude-md-*` - AI-assisted development
 
 ### Commit Conventions
 
-Follow conventional commits format:
+Gunakan format conventional commits:
 ```
 <type>(<scope>): <subject>
 
@@ -69,152 +150,313 @@ Follow conventional commits format:
 ```
 
 **Types**:
-- `feat`: New feature
+- `feat`: Fitur baru (contoh: feat(tcp): add basic TCP server)
 - `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting)
-- `refactor`: Code refactoring
-- `test`: Adding or updating tests
+- `docs`: Perubahan dokumentasi
+- `refactor`: Refactoring kode
 - `chore`: Maintenance tasks
+- `example`: Menambah contoh baru
 
-**Examples**:
+**Contoh**:
 ```
-feat(server): add WebSocket connection handling
-fix(client): resolve reconnection logic issue
-docs: update README with setup instructions
+feat(tcp): implement basic TCP echo server
+
+Add simple TCP server yang menerima koneksi client dan
+mengirim kembali pesan yang diterima (echo).
+
+feat(async): add non-blocking socket example
+
+Implement contoh socket non-blocking menggunakan fcntl()
+untuk demonstrasi proses asinkron.
 ```
 
 ---
 
-## Key Conventions for AI Assistants
+## Code Conventions for C++
 
-### Code Quality Standards
+### 1. Naming Conventions
 
-1. **Error Handling**
-   - Always implement proper error handling for socket connections
-   - Handle disconnections gracefully
-   - Implement reconnection logic with exponential backoff
-   - Log errors with context for debugging
+```cpp
+// Classes: PascalCase
+class TcpServer { };
+class JsonHelper { };
 
-2. **Security Considerations**
-   - Validate all incoming messages
-   - Implement authentication/authorization if needed
-   - Sanitize user inputs to prevent injection attacks
-   - Use secure WebSocket (wss://) in production
-   - Implement rate limiting to prevent abuse
+// Functions: snake_case
+void send_message(int socket_fd, const std::string& msg);
+int create_socket(int port);
 
-3. **Performance**
-   - Use connection pooling when appropriate
-   - Implement message queuing for high-traffic scenarios
-   - Consider binary protocols (e.g., MessagePack) for efficiency
-   - Monitor memory usage and prevent leaks
+// Variables: snake_case
+int server_socket;
+std::string client_address;
+const int MAX_BUFFER_SIZE = 1024;
 
-4. **Code Style**
-   - Use consistent naming conventions (camelCase for JavaScript/TypeScript)
-   - Add JSDoc/TypeDoc comments for public APIs
-   - Keep functions small and focused (single responsibility)
-   - Use async/await over callbacks when possible
+// Constants: UPPER_SNAKE_CASE
+const int DEFAULT_PORT = 8080;
+const int MAX_CONNECTIONS = 10;
+```
 
-### Testing Requirements
+### 2. Code Style
 
-1. **Unit Tests**
-   - Test individual components in isolation
-   - Mock socket connections for testing
-   - Aim for >80% code coverage
+```cpp
+// Gunakan const reference untuk parameter yang tidak diubah
+void process_data(const std::string& data);
 
-2. **Integration Tests**
-   - Test client-server communication
-   - Verify message formats and protocols
-   - Test error scenarios and edge cases
-
-3. **End-to-End Tests**
-   - Test complete user workflows
-   - Verify system behavior under load
-   - Test reconnection scenarios
-
-### Documentation Standards
-
-When adding code, always include:
-
-1. **README Updates**
-   - Installation instructions
-   - Quick start guide
-   - API documentation
-   - Configuration options
-
-2. **Code Comments**
-   - Explain complex logic
-   - Document message formats/protocols
-   - Add examples for public APIs
-
-3. **Change Documentation**
-   - Update CHANGELOG.md for significant changes
-   - Document breaking changes clearly
-   - Provide migration guides when needed
-
----
-
-## Common Patterns for Socket Programming
-
-### 1. Connection Management
-
-```javascript
-// Example pattern for connection handling
-const handleConnection = (socket) => {
-  console.log(`Client connected: ${socket.id}`);
-
-  socket.on('disconnect', (reason) => {
-    console.log(`Client disconnected: ${socket.id}, Reason: ${reason}`);
-  });
-
-  socket.on('error', (error) => {
-    console.error(`Socket error: ${error.message}`);
-  });
+// RAII untuk resource management
+class SocketWrapper {
+    int fd_;
+public:
+    SocketWrapper(int fd) : fd_(fd) {}
+    ~SocketWrapper() { if (fd_ >= 0) close(fd_); }
+    // ... copy/move semantics
 };
+
+// Prefer early return
+int send_data(int socket, const char* data, size_t len) {
+    if (socket < 0) return -1;
+    if (data == nullptr) return -1;
+    if (len == 0) return 0;
+
+    return send(socket, data, len, 0);
+}
+
+// Clear error handling
+int result = socket(AF_INET, SOCK_STREAM, 0);
+if (result < 0) {
+    std::cerr << "Error creating socket: " << strerror(errno) << std::endl;
+    return -1;
+}
 ```
 
-### 2. Message Handling
+### 3. Comments dan Documentation
 
-```javascript
-// Example pattern for message validation and handling
-const handleMessage = (socket, message) => {
-  try {
-    // Validate message structure
-    if (!isValidMessage(message)) {
-      socket.emit('error', { message: 'Invalid message format' });
-      return;
+```cpp
+/**
+ * Membuat TCP server socket dan bind ke port yang ditentukan.
+ *
+ * @param port Port number untuk listening (1024-65535)
+ * @return Socket file descriptor jika sukses, -1 jika gagal
+ *
+ * Contoh penggunaan:
+ *   int server_fd = create_tcp_server(8080);
+ *   if (server_fd < 0) {
+ *       // handle error
+ *   }
+ */
+int create_tcp_server(int port);
+
+// Inline comments untuk logika kompleks
+// Set socket ke non-blocking mode menggunakan fcntl
+int flags = fcntl(socket_fd, F_GETFL, 0);
+fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
+```
+
+---
+
+## Key Programming Patterns
+
+### 1. Basic TCP Server Pattern (Windows)
+
+```cpp
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iostream>
+#pragma comment(lib, "ws2_32.lib")
+
+SOCKET create_tcp_server(int port) {
+    // 0. Initialize Winsock (PENTING! Wajib di Windows)
+    WSADATA wsa_data;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa_data) != 0) {
+        std::cerr << "WSAStartup failed: " << WSAGetLastError() << std::endl;
+        return INVALID_SOCKET;
     }
 
-    // Process message
-    const response = processMessage(message);
+    // 1. Buat socket
+    SOCKET server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (server_fd == INVALID_SOCKET) {
+        std::cerr << "Socket failed: " << WSAGetLastError() << std::endl;
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
 
-    // Send response
-    socket.emit('response', response);
-  } catch (error) {
-    socket.emit('error', { message: error.message });
-  }
-};
+    // 2. Set socket options (optional, untuk reuse address)
+    char opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    // 3. Bind ke address dan port
+    sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
+
+    if (bind(server_fd, (sockaddr*)&address, sizeof(address)) == SOCKET_ERROR) {
+        std::cerr << "Bind failed: " << WSAGetLastError() << std::endl;
+        closesocket(server_fd);
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
+
+    // 4. Listen untuk koneksi
+    if (listen(server_fd, SOMAXCONN) == SOCKET_ERROR) {
+        std::cerr << "Listen failed: " << WSAGetLastError() << std::endl;
+        closesocket(server_fd);
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
+
+    std::cout << "Server listening on port " << port << std::endl;
+    return server_fd;
+}
+
+// Jangan lupa cleanup!
+void cleanup_server(SOCKET server_fd) {
+    closesocket(server_fd);
+    WSACleanup();
+}
 ```
 
-### 3. Event-Driven Architecture
+### 2. Basic TCP Client Pattern (Windows)
 
-```javascript
-// Example event emitter pattern
-class SocketManager extends EventEmitter {
-  constructor() {
-    super();
-    this.connections = new Map();
-  }
+```cpp
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iostream>
+#pragma comment(lib, "ws2_32.lib")
 
-  addConnection(id, socket) {
-    this.connections.set(id, socket);
-    this.emit('connection:add', id);
-  }
+SOCKET connect_to_server(const char* ip, int port) {
+    // 0. Initialize Winsock
+    WSADATA wsa_data;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa_data) != 0) {
+        std::cerr << "WSAStartup failed: " << WSAGetLastError() << std::endl;
+        return INVALID_SOCKET;
+    }
 
-  removeConnection(id) {
-    this.connections.delete(id);
-    this.emit('connection:remove', id);
-  }
+    // 1. Buat socket
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET) {
+        std::cerr << "Socket failed: " << WSAGetLastError() << std::endl;
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
+
+    // 2. Set server address
+    sockaddr_in serv_addr;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+
+    // Convert IP address from string to binary
+    if (inet_pton(AF_INET, ip, &serv_addr.sin_addr) <= 0) {
+        std::cerr << "Invalid address: " << ip << std::endl;
+        closesocket(sock);
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
+
+    // 3. Connect ke server
+    if (connect(sock, (sockaddr*)&serv_addr, sizeof(serv_addr)) == SOCKET_ERROR) {
+        std::cerr << "Connection failed: " << WSAGetLastError() << std::endl;
+        closesocket(sock);
+        WSACleanup();
+        return INVALID_SOCKET;
+    }
+
+    std::cout << "Connected to server " << ip << ":" << port << std::endl;
+    return sock;
+}
+
+// Cleanup
+void cleanup_client(SOCKET sock) {
+    closesocket(sock);
+    WSACleanup();
+}
+```
+
+### 3. UDP Socket Pattern
+
+```cpp
+// UDP Server
+int create_udp_server(int port) {
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0) {
+        perror("socket failed");
+        return -1;
+    }
+
+    struct sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port);
+
+    if (bind(sock, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        perror("bind failed");
+        close(sock);
+        return -1;
+    }
+
+    return sock;
+}
+
+// UDP receive
+ssize_t receive_udp(int sock, char* buffer, size_t len, struct sockaddr_in* client_addr) {
+    socklen_t addr_len = sizeof(*client_addr);
+    return recvfrom(sock, buffer, len, 0, (struct sockaddr*)client_addr, &addr_len);
+}
+```
+
+### 4. Async/Non-Blocking Pattern
+
+```cpp
+// Set socket ke non-blocking
+void set_nonblocking(int socket_fd) {
+    int flags = fcntl(socket_fd, F_GETFL, 0);
+    fcntl(socket_fd, F_SETFL, flags | O_NONBLOCK);
+}
+
+// Async receive dengan timeout
+bool receive_with_timeout(int sock, char* buffer, size_t len, int timeout_ms) {
+    fd_set read_fds;
+    FD_ZERO(&read_fds);
+    FD_SET(sock, &read_fds);
+
+    struct timeval timeout;
+    timeout.tv_sec = timeout_ms / 1000;
+    timeout.tv_usec = (timeout_ms % 1000) * 1000;
+
+    int result = select(sock + 1, &read_fds, nullptr, nullptr, &timeout);
+
+    if (result > 0 && FD_ISSET(sock, &read_fds)) {
+        recv(sock, buffer, len, 0);
+        return true;
+    }
+    return false;  // Timeout atau error
+}
+```
+
+### 5. JSON Message Pattern
+
+```cpp
+#include "json.hpp"
+using json = nlohmann::json;
+
+// Membuat JSON message
+std::string create_json_message(const std::string& type, const std::string& content) {
+    json msg;
+    msg["type"] = type;
+    msg["content"] = content;
+    msg["timestamp"] = std::time(nullptr);
+    return msg.dump();
+}
+
+// Parse JSON message
+void parse_json_message(const std::string& json_str) {
+    try {
+        json msg = json::parse(json_str);
+        std::string type = msg["type"];
+        std::string content = msg["content"];
+
+        std::cout << "Type: " << type << ", Content: " << content << std::endl;
+    } catch (const json::parse_error& e) {
+        std::cerr << "JSON parse error: " << e.what() << std::endl;
+    }
 }
 ```
 
@@ -222,210 +464,292 @@ class SocketManager extends EventEmitter {
 
 ## AI Assistant Guidelines
 
-### When Adding Features
+### When Creating Examples
 
-1. **Analyze First**
-   - Check existing code patterns
-   - Identify dependencies and conflicts
-   - Review similar implementations
+1. **Keep It Simple**
+   - Mahasiswa baru belajar socket programming
+   - Fokus pada konsep dasar, bukan fitur advanced
+   - Setiap contoh harus bisa dijelaskan dalam 10-15 menit
 
-2. **Plan Implementation**
-   - Break down into smaller tasks
-   - Use TodoWrite tool for tracking
-   - Consider backward compatibility
+2. **Make It Practical**
+   - Setiap contoh harus bisa di-compile dan dijalankan
+   - Include output yang jelas untuk debugging
+   - Berikan contoh use case yang relatable (chat, echo server, dll)
 
-3. **Implement Incrementally**
-   - Start with core functionality
-   - Add tests alongside code
-   - Document as you go
+3. **Build Incrementally**
+   - Mulai dari TCP sederhana → UDP → Async
+   - Setiap level menambah kompleksitas sedikit
+   - Reuse code patterns yang sudah dijelaskan sebelumnya
 
-4. **Verify and Test**
-   - Run existing tests
-   - Add new test cases
-   - Test edge cases and error scenarios
+4. **Focus on Learning**
+   - Tambahkan comments yang menjelaskan "mengapa", bukan hanya "apa"
+   - Highlight perbedaan antara TCP vs UDP
+   - Explain trade-offs dari setiap pendekatan
 
-### When Debugging
+### Code Simplicity Principles
 
-1. **Gather Context**
-   - Read error messages carefully
-   - Check recent changes (git log)
-   - Review related code sections
+```cpp
+// ✅ GOOD - Simple, clear, educational
+void handle_client(int client_sock) {
+    char buffer[1024];
+    int bytes_read = recv(client_sock, buffer, sizeof(buffer), 0);
 
-2. **Reproduce Issue**
-   - Create minimal reproduction case
-   - Document steps to reproduce
-   - Check if issue is consistent
+    if (bytes_read > 0) {
+        buffer[bytes_read] = '\0';
+        std::cout << "Received: " << buffer << std::endl;
 
-3. **Fix Systematically**
-   - Identify root cause
-   - Implement fix with tests
-   - Verify fix doesn't break other functionality
+        // Echo back ke client
+        send(client_sock, buffer, bytes_read, 0);
+    }
+}
 
-### When Refactoring
-
-1. **Ensure Test Coverage**
-   - Write tests for existing behavior
-   - Verify tests pass before refactoring
-   - Keep tests green throughout
-
-2. **Refactor Incrementally**
-   - Make small, focused changes
-   - Commit frequently
-   - Test after each change
-
-3. **Document Changes**
-   - Update comments and documentation
-   - Note any API changes
-   - Update examples if needed
-
----
-
-## Common Socket.IO Events (if using Socket.IO)
-
-### Server-Side Events
-- `connection` - New client connected
-- `disconnect` - Client disconnected
-- `error` - Socket error occurred
-
-### Custom Events (Examples)
-- `message` - General message exchange
-- `chat:message` - Chat message
-- `user:join` - User joined room
-- `user:leave` - User left room
-- `ping` - Heartbeat/keep-alive
-
-### Client-Side Events
-- `connect` - Connected to server
-- `connect_error` - Connection error
-- `disconnect` - Disconnected from server
-- `reconnect` - Reconnected to server
-
----
-
-## Environment Configuration
-
-### Development
-```bash
-NODE_ENV=development
-PORT=3000
-HOST=localhost
-LOG_LEVEL=debug
+// ❌ AVOID - Too complex untuk demo
+template<typename MessageHandler>
+class AsyncSocketManager {
+    std::unordered_map<int, std::shared_ptr<Connection>> connections_;
+    std::thread_pool pool_;
+    // ... terlalu banyak abstraction untuk mahasiswa tahun 2
+};
 ```
 
-### Production
-```bash
-NODE_ENV=production
-PORT=8080
-HOST=0.0.0.0
-LOG_LEVEL=info
-ENABLE_CORS=false
+### Documentation Style for Students
+
+```cpp
+/**
+ * TCP SERVER - Contoh sederhana
+ *
+ * Program ini membuat server TCP yang:
+ * 1. Listen pada port 8080
+ * 2. Menerima koneksi dari client
+ * 3. Menerima pesan dari client
+ * 4. Mengirim kembali pesan yang sama (echo)
+ *
+ * Cara menjalankan:
+ *   1. Compile: g++ tcp_server.cpp -o server
+ *   2. Run: ./server
+ *   3. Di terminal lain, jalankan client atau gunakan telnet:
+ *      telnet localhost 8080
+ *
+ * Konsep yang didemonstrasikan:
+ * - Socket creation (socket())
+ * - Binding ke port (bind())
+ * - Listening untuk koneksi (listen())
+ * - Accepting client connection (accept())
+ * - Receiving data (recv())
+ * - Sending data (send())
+ */
 ```
 
 ---
 
-## Troubleshooting
+## Build Instructions
 
-### Common Issues
+### Using Makefile
 
-1. **Connection Refused**
-   - Check if server is running
-   - Verify port is not in use
-   - Check firewall settings
+```makefile
+# Makefile example
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -Wextra -I./include
+LDFLAGS = -pthread
 
-2. **CORS Errors**
-   - Configure CORS headers on server
-   - Use appropriate origin settings
-   - Consider proxy for development
+# TCP examples
+tcp_server: src/tcp/tcp_server.cpp
+	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFLAGS)
 
-3. **Memory Leaks**
-   - Remove event listeners on disconnect
-   - Clear intervals/timeouts
-   - Monitor with heap snapshots
+tcp_client: src/tcp/tcp_client.cpp
+	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFLAGS)
 
-4. **Message Loss**
-   - Implement acknowledgments
-   - Add message queuing
-   - Use persistent storage if needed
+# UDP examples
+udp_server: src/udp/udp_server.cpp
+	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFLAGS)
 
----
+udp_client: src/udp/udp_client.cpp
+	$(CXX) $(CXXFLAGS) $^ -o bin/$@ $(LDFLAGS)
 
-## Performance Considerations
+all: tcp_server tcp_client udp_server udp_client
 
-1. **Scaling**
-   - Use Redis adapter for multi-server setups
-   - Implement load balancing
-   - Consider sticky sessions
+clean:
+	rm -f bin/*
+```
 
-2. **Monitoring**
-   - Track active connections
-   - Monitor message throughput
-   - Log performance metrics
+### Using CMake (Optional)
 
-3. **Optimization**
-   - Compress messages (gzip)
-   - Use binary protocols when appropriate
-   - Implement message batching
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(SocketAsinkronDemo)
 
----
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-## Security Checklist
+include_directories(include)
 
-- [ ] Implement authentication
-- [ ] Validate all inputs
-- [ ] Use secure protocols (wss://)
-- [ ] Implement rate limiting
-- [ ] Add CORS configuration
-- [ ] Sanitize user data
-- [ ] Log security events
-- [ ] Regular dependency updates
-- [ ] Use environment variables for secrets
-- [ ] Implement proper authorization
+# TCP examples
+add_executable(tcp_server src/tcp/tcp_server.cpp)
+add_executable(tcp_client src/tcp/tcp_client.cpp)
+
+# UDP examples
+add_executable(udp_server src/udp/udp_server.cpp)
+add_executable(udp_client src/udp/udp_client.cpp)
+```
 
 ---
 
-## Resources
+## Testing Strategy
 
-### Documentation
-- Socket.IO: https://socket.io/docs/
-- WebSocket API: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
-- Node.js Events: https://nodejs.org/api/events.html
+### Manual Testing
 
-### Tools
-- Postman (WebSocket testing)
-- wscat (CLI WebSocket client)
-- Artillery (Load testing)
+Karena ini demo educational, fokus pada manual testing yang bisa dilakukan live di kelas:
+
+1. **TCP Echo Test**
+   ```bash
+   # Terminal 1
+   ./tcp_server
+
+   # Terminal 2
+   ./tcp_client
+   # Atau gunakan telnet
+   telnet localhost 8080
+   ```
+
+2. **UDP Test**
+   ```bash
+   # Terminal 1
+   ./udp_server
+
+   # Terminal 2
+   ./udp_client
+   ```
+
+3. **JSON Message Test**
+   ```bash
+   # Send JSON message dan lihat parsing di server
+   echo '{"type":"message","content":"hello"}' | nc localhost 8080
+   ```
+
+### Debugging Tips
+
+```cpp
+// Helper macro untuk debugging
+#define DEBUG_PRINT(x) std::cout << "[DEBUG] " << __FUNCTION__ << ": " << x << std::endl
+
+// Contoh penggunaan
+DEBUG_PRINT("Socket created with fd: " << socket_fd);
+DEBUG_PRINT("Received " << bytes_read << " bytes");
+```
 
 ---
 
-## Notes for Future Development
+## Common Issues and Solutions
 
-### Priority Tasks
-1. Initialize project with appropriate package manager
-2. Set up basic server implementation
-3. Create simple client example
-4. Add comprehensive tests
-5. Write detailed README
-6. Add example use cases
+### 1. "Address already in use"
+```cpp
+// Solution: Set SO_REUSEADDR before bind
+int opt = 1;
+setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+```
 
-### Considerations
-- Choose appropriate language/framework based on requirements
-- Decide on message protocol (JSON, MessagePack, Protocol Buffers)
-- Plan for scalability from the start
-- Consider real-time vs. periodic updates
-- Think about offline support and reconnection
+### 2. "Connection refused"
+```cpp
+// Check:
+// 1. Apakah server sudah running?
+// 2. Apakah port number benar?
+// 3. Apakah firewall memblokir port?
+```
+
+### 3. Buffer handling
+```cpp
+// Selalu null-terminate string dari recv()
+char buffer[1024];
+int bytes_read = recv(sock, buffer, sizeof(buffer) - 1, 0);
+if (bytes_read > 0) {
+    buffer[bytes_read] = '\0';  // PENTING!
+    std::cout << buffer << std::endl;
+}
+```
+
+---
+
+## Demo Sequence (150 menit)
+
+### Segment 1: Pengantar (15 menit)
+- Apa itu socket?
+- Client-Server architecture
+- TCP vs UDP overview
+
+### Segment 2: TCP Demo (45 menit)
+- Basic TCP server
+- Basic TCP client
+- Echo server demo
+- Live debugging
+
+### Segment 3: UDP Demo (30 menit)
+- Basic UDP server
+- Basic UDP client
+- Perbedaan dengan TCP
+- Use cases
+
+### Segment 4: Async + JSON (45 menit)
+- Non-blocking sockets
+- Select/poll untuk multiple clients
+- JSON message format
+- Simple chat demo
+
+### Segment 5: Q&A (15 menit)
+- Tanya jawab
+- Tips untuk belajar lebih lanjut
+
+---
+
+## Learning Resources for Students
+
+### Recommended Reading
+1. Beej's Guide to Network Programming (free online)
+2. "UNIX Network Programming" by W. Richard Stevens (advanced)
+3. C++ Socket Programming tutorials (cppreference.com)
+
+### Online Tools
+- `netcat` (nc) - untuk testing socket
+- `telnet` - untuk testing TCP
+- Wireshark - untuk melihat network packets
+- `netstat` / `ss` - untuk melihat active connections
+
+---
+
+## Security Notes
+
+Untuk demo ini, security tidak menjadi fokus utama, tapi perhatikan:
+
+```cpp
+// ✅ Good practice bahkan untuk demo
+// 1. Validate buffer sizes
+if (bytes_read >= sizeof(buffer)) {
+    // Handle error
+}
+
+// 2. Check return values
+if (send(sock, data, len, 0) < 0) {
+    perror("send failed");
+}
+
+// 3. Close sockets properly
+close(socket_fd);
+```
+
+**Catatan**: Di production code, perlu tambahan: input validation, authentication, encryption (SSL/TLS), dll.
 
 ---
 
 ## Changelog
 
 ### 2025-11-14 - Initial Setup
-- Created CLAUDE.md with comprehensive guidelines
-- Established project structure recommendations
-- Defined coding conventions and best practices
-- Set up security and performance guidelines
+- Created CLAUDE.md dengan konteks C++ educational demo
+- Defined struktur proyek untuk socket programming demo
+- Established code conventions untuk C++
+- Added patterns dan examples untuk TCP/UDP/Async
+- Documented demo sequence untuk 150 menit lecture
 
 ---
 
 **End of Document**
 
-*This document should be updated whenever significant changes are made to the repository structure, conventions, or development workflow.*
+*Dokumen ini adalah panduan untuk AI assistant dalam mengembangkan kode demo. Update ketika ada perubahan signifikan pada struktur atau requirements.*

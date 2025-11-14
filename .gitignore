@@ -1,0 +1,42 @@
+# Build outputs
+build/
+bin/
+*.o
+*.out
+*.exe
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Compiled binaries
+tcp_server
+tcp_client
+udp_server
+udp_client
+async_server
+async_client
+chat_server
+chat_client
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.cmake
+
+# Dependencies
+*.d
