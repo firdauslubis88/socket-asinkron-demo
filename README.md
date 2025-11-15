@@ -39,6 +39,50 @@ socket-asinkron-demo/
 
 ## 🚀 Quick Start
 
+### ⭐ Setup untuk MSVC (Visual Studio) - RECOMMENDED
+
+Jika Anda menggunakan **Visual Studio** dengan compiler `cl.exe`:
+
+**PENTING**: Sebelum memulai, pastikan Anda sudah buka VSCode dari **Developer Command Prompt for VS**!
+
+1. **Buka Developer Command Prompt for VS 2022** (atau versi VS Anda)
+   ```cmd
+   # Start Menu → "Developer Command Prompt for VS 2022"
+   ```
+
+2. **Navigate ke project dan buka VSCode**
+   ```cmd
+   cd C:\path\to\socket-asinkron-demo
+   code .
+   ```
+
+3. **Di VSCode, delete build folder jika ada** (untuk clear cache):
+   - Hapus folder `build/` jika sudah ada
+   - Atau run: `rmdir /s /q build`
+
+4. **Select Visual Studio Kit**:
+   - Press `Ctrl+Shift+P`
+   - Ketik: `CMake: Select a Kit`
+   - Pilih: **Visual Studio Community 2022 Release - amd64** (atau versi VS Anda)
+   - **JANGAN pilih** kit yang ada kata "MinGW"!
+
+5. **Configure CMake**:
+   - Press `Ctrl+Shift+P`
+   - Ketik: `CMake: Configure`
+   - Tunggu sampai selesai tanpa error
+
+6. **Build** (Press `F7` atau `Ctrl+Shift+B`)
+
+7. **Run/Debug**:
+   - Press `F5`
+   - Pilih: "Debug: TCP Server (MSVC)" atau program lain
+
+**Output**: Executables akan ada di `build\Debug\` (bukan `build\bin\`!)
+
+**Jika ada error**: Lihat [SETUP_MSVC.md](docs/SETUP_MSVC.md) untuk troubleshooting lengkap.
+
+---
+
 ### Prerequisites
 
 #### Windows (Platform Utama)
@@ -102,16 +146,21 @@ cd build
 cmake .. -G "MinGW Makefiles"
 cmake --build .
 
-# Windows (Visual Studio)
+# Windows (Visual Studio / MSVC)
 cmake .. -G "Visual Studio 16 2019"
 cmake --build . --config Debug
+# Executables ada di: build/Debug/
+
+# Windows (Visual Studio 2022)
+cmake .. -G "Visual Studio 17 2022"
+cmake --build . --config Debug
+# Executables ada di: build/Debug/
 
 # Linux
 mkdir build
 cd build
 cmake ..
 cmake --build .
-
 # Executables ada di: build/bin/
 ```
 
@@ -139,7 +188,34 @@ build.bat
 
 #### Dari Command Line
 
-**Windows**
+**Windows (MSVC / Visual Studio)**
+
+Path executables: `build\Debug\` untuk Debug build, `build\Release\` untuk Release build
+
+**TCP Echo Server**
+```cmd
+REM Terminal 1: Jalankan server
+build\Debug\tcp_server.exe
+
+REM Terminal 2: Jalankan client
+build\Debug\tcp_client.exe
+
+REM Atau gunakan telnet
+telnet localhost 8080
+```
+
+**Chat Demo** ⭐ (Most Advanced)
+```cmd
+REM Terminal 1: Jalankan server
+build\Debug\chat_server.exe
+
+REM Terminal 2, 3, 4: Jalankan multiple clients
+build\Debug\chat_client.exe
+```
+
+**Windows (MinGW)**
+
+Path executables: `build\bin\`
 
 **TCP Echo Server**
 ```cmd
@@ -148,36 +224,6 @@ build\bin\tcp_server.exe
 
 REM Terminal 2: Jalankan client
 build\bin\tcp_client.exe
-
-REM Atau gunakan telnet
-telnet localhost 8080
-```
-
-**UDP Server**
-```cmd
-REM Terminal 1: Jalankan server
-build\bin\udp_server.exe
-
-REM Terminal 2: Jalankan client
-build\bin\udp_client.exe
-```
-
-**Async Server** (Multiple Clients)
-```cmd
-REM Terminal 1: Jalankan server
-build\bin\async_server.exe
-
-REM Terminal 2, 3, 4: Jalankan multiple clients
-build\bin\async_client.exe
-```
-
-**Chat Demo** ⭐ (Most Advanced)
-```cmd
-REM Terminal 1: Jalankan server
-build\bin\chat_server.exe
-
-REM Terminal 2, 3, 4: Jalankan multiple clients
-build\bin\chat_client.exe
 ```
 
 **Linux**
@@ -307,10 +353,12 @@ build.bat
 ## 📚 Dokumentasi
 
 Dokumentasi lengkap tersedia di folder `docs/`:
+- **[Setup MSVC](docs/SETUP_MSVC.md)** ⭐ - Setup Visual Studio (MSVC) + VSCode + CMake
+- **[Quick Start VSCode](docs/QUICK_START_VSCODE.md)** - Panduan cepat VSCode untuk pemula
 - [Penjelasan TCP](docs/penjelasan-tcp.md) - Tutorial TCP programming
 - [Penjelasan UDP](docs/penjelasan-udp.md) - Tutorial UDP programming
 - [Penjelasan Async](docs/penjelasan-async.md) - Tutorial async/non-blocking
-- [Windows Setup](docs/windows-setup.md) - Setup MinGW, VSCode, CMake
+- [Windows Setup](docs/windows-setup.md) - Setup MinGW, VSCode, CMake (alternative)
 
 ## 🔍 Troubleshooting
 
@@ -333,6 +381,25 @@ Install extension dari VSCode marketplace:
 
 ### CMake
 
+#### Error: "CMake was unable to find a build program corresponding to MinGW Makefiles"
+
+Ini terjadi ketika CMake cache masih menyimpan generator MinGW tapi Anda ingin pakai MSVC.
+
+**Solusi**:
+1. **Delete build folder**: `rmdir /s /q build` (atau hapus manual)
+2. **Di VSCode**:
+   - Press `Ctrl+Shift+P`
+   - Ketik: `CMake: Delete Cache and Reconfigure`
+3. **Select Visual Studio Kit**:
+   - Press `Ctrl+Shift+P`
+   - Ketik: `CMake: Select a Kit`
+   - Pilih: **Visual Studio Community 2022 Release - amd64** (BUKAN MinGW!)
+4. **Configure ulang**:
+   - Press `Ctrl+Shift+P`
+   - Ketik: `CMake: Configure`
+
+**Penting**: Pastikan VSCode dibuka dari **Developer Command Prompt for VS**!
+
 #### Error: "CMake not found"
 Install CMake dari: https://cmake.org/download/
 
@@ -348,6 +415,8 @@ cmake .. -G "MinGW Makefiles"
 Untuk Visual Studio:
 ```cmd
 cmake .. -G "Visual Studio 16 2019"
+# atau
+cmake .. -G "Visual Studio 17 2022"
 ```
 
 ### Windows
