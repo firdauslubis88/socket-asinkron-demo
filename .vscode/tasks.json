@@ -11,14 +11,14 @@
                 "-B",
                 "build",
                 "-G",
-                "MinGW Makefiles"
+                "Visual Studio 17 2022"
             ],
             "group": "build",
             "problemMatcher": [],
-            "detail": "Configure project with CMake"
+            "detail": "Configure project with CMake (Visual Studio)"
         },
         {
-            "label": "CMake: Build All",
+            "label": "CMake: Build All (Debug)",
             "type": "shell",
             "command": "cmake",
             "args": [
@@ -34,7 +34,23 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "detail": "Build all targets"
+            "detail": "Build all targets (Debug)"
+        },
+        {
+            "label": "CMake: Build All (Release)",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Release"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build all targets (Release)"
         },
         {
             "label": "CMake: Build TCP",
@@ -56,6 +72,7 @@
             "label": "CMake: Build UDP",
             "type": "shell",
             "command": "cmake",
+            "args": [
                 "--build",
                 "build",
                 "--target",

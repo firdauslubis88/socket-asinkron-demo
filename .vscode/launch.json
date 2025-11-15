@@ -5,97 +5,394 @@
             "name": "Debug: TCP Server (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/tcp_server.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/tcp_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: TCP Client (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/tcp_client.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/tcp_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: Chat Server (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/chat_server.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/chat_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: Chat Client (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/chat_client.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/chat_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: UDP Server (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/udp_server.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/udp_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: UDP Client (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/udp_client.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/udp_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: Async Server (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/async_server.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/async_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
         },
         {
             "name": "Debug: Async Client (MSVC)",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/async_client.exe",
+            "program": "${workspaceFolder}/build/bin/Debug/async_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "CMake: Build All"
+            "preLaunchTask": "CMake: Build All (Debug)"
+        },
+        {
+            "name": "Run: TCP Server (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/tcp_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: TCP Client (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/tcp_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: Chat Server (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/chat_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: Chat Client (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/chat_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: UDP Server (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/udp_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: UDP Client (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/udp_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: Async Server (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/async_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: Async Client (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/async_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: JSON Server (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/json_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        },
+        {
+            "name": "Run: JSON Client (Release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/Release/json_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All (Release)"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "TCP: Server + Client",
+            "configurations": [
+                "Debug: TCP Server (MSVC)",
+                "Debug: TCP Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "TCP",
+                "order": 1
+            }
+        },
+        {
+            "name": "Chat: Server + 1 Client (Debug)",
+            "configurations": [
+                "Debug: Chat Server (MSVC)",
+                "Debug: Chat Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Chat",
+                "order": 2
+            }
+        },
+        {
+            "name": "Chat: Server + 2 Clients (Debug)",
+            "configurations": [
+                "Debug: Chat Server (MSVC)",
+                "Debug: Chat Client (MSVC)",
+                "Debug: Chat Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Chat",
+                "order": 3
+            }
+        },
+        {
+            "name": "UDP: Server + Client",
+            "configurations": [
+                "Debug: UDP Server (MSVC)",
+                "Debug: UDP Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "UDP",
+                "order": 3
+            }
+        },
+        {
+            "name": "Async: Server + 1 Client (Debug)",
+            "configurations": [
+                "Debug: Async Server (MSVC)",
+                "Debug: Async Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Async",
+                "order": 4
+            }
+        },
+        {
+            "name": "Async: Server + 3 Clients (Debug)",
+            "configurations": [
+                "Debug: Async Server (MSVC)",
+                "Debug: Async Client (MSVC)",
+                "Debug: Async Client (MSVC)",
+                "Debug: Async Client (MSVC)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Async",
+                "order": 5
+            }
+        },
+        {
+            "name": "TCP: Server + Client (Release)",
+            "configurations": [
+                "Run: TCP Server (Release)",
+                "Run: TCP Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 5
+            }
+        },
+        {
+            "name": "Chat: Server + 1 Client (Release)",
+            "configurations": [
+                "Run: Chat Server (Release)",
+                "Run: Chat Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 6
+            }
+        },
+        {
+            "name": "Chat: Server + 2 Clients (Release)",
+            "configurations": [
+                "Run: Chat Server (Release)",
+                "Run: Chat Client (Release)",
+                "Run: Chat Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 7
+            }
+        },
+        {
+            "name": "UDP: Server + Client (Release)",
+            "configurations": [
+                "Run: UDP Server (Release)",
+                "Run: UDP Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 7
+            }
+        },
+        {
+            "name": "Async: Server + 1 Client (Release)",
+            "configurations": [
+                "Run: Async Server (Release)",
+                "Run: Async Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 8
+            }
+        },
+        {
+            "name": "Async: Server + 3 Clients (Release)",
+            "configurations": [
+                "Run: Async Server (Release)",
+                "Run: Async Client (Release)",
+                "Run: Async Client (Release)",
+                "Run: Async Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "Release",
+                "order": 9
+            }
+        },
+        {
+            "name": "JSON: Server + Client (Release)",
+            "configurations": [
+                "Run: JSON Server (Release)",
+                "Run: JSON Client (Release)"
+            ],
+            "stopAll": true,
+            "presentation": {
+                "hidden": false,
+                "group": "JSON Demo",
+                "order": 10
+            }
         }
     ]
 }

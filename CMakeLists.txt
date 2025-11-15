@@ -75,7 +75,7 @@ add_executable(async_client
 target_link_libraries(async_client ${SOCKET_LIBS})
 
 # ============================================
-# Chat Demo (Advanced Example)
+# Chat Demo (Advanced Example - with Threading)
 # ============================================
 add_executable(chat_server
     src/examples/chat_demo/chat_server.cpp
@@ -88,6 +88,19 @@ add_executable(chat_client
 target_link_libraries(chat_client ${SOCKET_LIBS})
 
 # ============================================
+# JSON Demo (Message Protocol Example)
+# ============================================
+add_executable(json_server
+    src/examples/json_demo/json_server.cpp
+)
+target_link_libraries(json_server ${SOCKET_LIBS})
+
+add_executable(json_client
+    src/examples/json_demo/json_client.cpp
+)
+target_link_libraries(json_client ${SOCKET_LIBS})
+
+# ============================================
 # Installation (optional)
 # ============================================
 install(TARGETS
@@ -95,6 +108,7 @@ install(TARGETS
     udp_server udp_client
     async_server async_client
     chat_server chat_client
+    json_server json_client
     RUNTIME DESTINATION bin
 )
 
@@ -122,9 +136,14 @@ add_custom_target(chat
     DEPENDS chat_server chat_client
 )
 
+# Build JSON demo
+add_custom_target(json_demo
+    DEPENDS json_server json_client
+)
+
 # Build everything
 add_custom_target(all_examples
-    DEPENDS tcp udp async chat
+    DEPENDS tcp udp async chat json_demo
 )
 
 # ============================================
@@ -150,5 +169,6 @@ message(STATUS "  - tcp_server, tcp_client")
 message(STATUS "  - udp_server, udp_client")
 message(STATUS "  - async_server, async_client")
 message(STATUS "  - chat_server, chat_client")
+message(STATUS "  - json_server, json_client")
 message(STATUS "========================================")
 message(STATUS "")

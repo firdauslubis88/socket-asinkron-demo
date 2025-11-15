@@ -1,12 +1,17 @@
 /**
- * Chat Client - Multi-User Chat Application Client
+ * Chat Client - Multi-User Chat Application Client (with Threading)
  *
  * Program ini membuat chat client yang:
  * 1. Connect ke chat server
  * 2. Input username
- * 3. Kirim dan terima messages
+ * 3. Kirim dan terima messages SECARA REAL-TIME (menggunakan 2 threads)
  * 4. Support commands (/users, /quit)
- * 5. Display messages dari users lain
+ * 5. Display messages dari users lain LANGSUNG saat diterima
+ *
+ * Konsep Threading:
+ * - Thread 1 (Receive): Terus-menerus listen untuk messages dari server
+ * - Thread 2 (Main/Send): Menunggu input user dan mengirim ke server
+ * - Kedua thread berjalan bersamaan (concurrent) sehingga pesan langsung muncul!
  *
  * Cara compile (Windows):
  *   g++ -std=c++11 -Iinclude chat_client.cpp -o chat_client.exe -lws2_32
@@ -21,12 +26,15 @@
  * Test:
  *   - Jalankan chat_server.exe dulu
  *   - Jalankan multiple chat_client.exe
- *   - Chat dengan users lain!
+ *   - Chat dengan users lain - pesan langsung muncul tanpa perlu kirim pesan dulu!
  */
 
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <thread>     // C++11 threading
+#include <atomic>     // For atomic flag (thread-safe boolean)
+#include <chrono>     // For sleep
 
 // Platform-specific includes
 #ifdef _WIN32
@@ -49,6 +57,10 @@
 const char* SERVER_IP = "127.0.0.1";
 const int SERVER_PORT = 7777;  // Chat server port
 const int BUFFER_SIZE = 1024;
+
+// Global flag untuk kontrol thread
+// std::atomic membuat variable ini thread-safe (bisa diakses dari multiple threads)
+std::atomic<bool> g_running(true);
 
 /**
  * Initialize Winsock (Windows only)
@@ -83,6 +95,49 @@ void displayHeader(const std::string& username) {
     std::cout << "========================================" << std::endl;
     std::cout << "Commands: /users, /quit" << std::endl;
     std::cout << "========================================\n" << std::endl;
+}
+
+/**
+ * Receive Thread Function
+ * Thread ini akan terus-menerus listen untuk messages dari server
+ * dan langsung menampilkan ke screen saat ada pesan masuk.
+ *
+ * Berjalan secara concurrent (bersamaan) dengan main thread.
+ */
+void receiveMessages(SOCKET clientSocket) {
+    char buffer[BUFFER_SIZE];
+
+    while (g_running) {
+        memset(buffer, 0, BUFFER_SIZE);
+
+        // Blocking recv - akan wait sampai ada data
+        int bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
+
+        if (bytesReceived > 0) {
+            buffer[bytesReceived] = '\0';
+
+            // Print pesan yang diterima
+            // Note: di real-world app, perlu lock untuk cout agar tidak clash
+            // dengan main thread. Tapi untuk demo sederhana ini, kita skip mutex.
+            std::cout << buffer << std::flush;
+
+        } else if (bytesReceived == 0) {
+            // Server closed connection
+            if (g_running) {
+                std::cout << "\n[INFO] Server closed connection" << std::endl;
+                g_running = false;
+            }
+            break;
+
+        } else {
+            // Error
+            if (g_running) {
+                std::cerr << "\n[ERROR] Receive failed!" << std::endl;
+                g_running = false;
+            }
+            break;
+        }
+    }
 }
 
 int main() {
@@ -164,11 +219,20 @@ int main() {
     // Display chat UI
     displayHeader(username);
 
-    // Main chat loop
-    std::string input;
-    bool running = true;
+    // ========================================
+    // START RECEIVE THREAD
+    // ========================================
+    // Thread ini akan berjalan di background untuk terus-menerus menerima pesan
+    std::cout << "[INFO] Starting receive thread...\n" << std::endl;
+    std::thread receiveThread(receiveMessages, clientSocket);
 
-    while (running) {
+    // ========================================
+    // MAIN THREAD - INPUT LOOP
+    // ========================================
+    // Main thread tetap di sini untuk handle user input
+    std::string input;
+
+    while (g_running) {
         // Get user input
         std::cout << "> ";
         std::getline(std::cin, input);
@@ -183,44 +247,26 @@ int main() {
 
         if (bytesSent == SOCKET_ERROR) {
             std::cerr << "\n[ERROR] Send failed!" << std::endl;
+            g_running = false;
             break;
         }
 
         // Check for /quit command
         if (input == "/quit") {
-            running = false;
-            // Receive goodbye message
-            memset(buffer, 0, BUFFER_SIZE);
-            bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
-            if (bytesReceived > 0) {
-                buffer[bytesReceived] = '\0';
-                std::cout << buffer;
-            }
+            g_running = false;
+            // Give receive thread time to get goodbye message
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             break;
         }
+    }
 
-        // Receive response
-        memset(buffer, 0, BUFFER_SIZE);
-        bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
-
-        if (bytesReceived > 0) {
-            buffer[bytesReceived] = '\0';
-
-            // Display response
-            std::cout << buffer;
-
-            // If response is multiline (like /users), don't show prompt yet
-            if (input == "/users") {
-                std::cout << std::endl;
-            }
-
-        } else if (bytesReceived == 0) {
-            std::cout << "\n[INFO] Server closed connection" << std::endl;
-            break;
-        } else {
-            std::cerr << "\n[ERROR] Receive failed!" << std::endl;
-            break;
-        }
+    // ========================================
+    // CLEANUP THREAD
+    // ========================================
+    // Tunggu receive thread selesai sebelum exit
+    std::cout << "\n[INFO] Waiting for receive thread to finish..." << std::endl;
+    if (receiveThread.joinable()) {
+        receiveThread.join();
     }
 
     // Cleanup

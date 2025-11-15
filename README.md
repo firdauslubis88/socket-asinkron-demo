@@ -19,6 +19,24 @@ Mahasiswa yang telah mempelajari:
 - ✅ Data structures (linked list, searching, sorting)
 - ✅ OOP (abstraksi, enkapsulasi, pewarisan, polymorphism)
 
+## 🔍 Demo Programs Overview
+
+Project ini menyediakan **5 demo programs** yang saling melengkapi:
+
+| # | Demo | Clients | Komunikasi | Protocol | Port | Dokumentasi |
+|---|------|---------|------------|----------|------|-------------|
+| 1 | **TCP** | 1 | Server ↔ Client | TCP (echo) | 8080 | [penjelasan-tcp.md](docs/penjelasan-tcp.md) |
+| 2 | **UDP** | 1 | Server ↔ Client | UDP (connectionless) | 9000 | [penjelasan-udp.md](docs/penjelasan-udp.md) |
+| 3 | **Async** | 3+ | Server ↔ Clients | TCP + select() | 8080 | [penjelasan-async.md](docs/penjelasan-async.md) |
+| 4 | **Chat** | 2+ | Client ↔ Server ↔ Client | TCP + threading | 7777 | [penjelasan-threading.md](docs/penjelasan-threading.md) |
+| 5 | **JSON** | 1 | Server ↔ Client | TCP + JSON | 9999 | [penjelasan-json.md](docs/penjelasan-json.md) |
+
+**Perbedaan Utama**:
+- **TCP/UDP**: Pengenalan dasar protocol (1-to-1 communication)
+- **Async**: Mendemonstrasikan **concurrent handling** multiple clients dengan `select()` (Server handle banyak client, tapi client tidak saling berkomunikasi)
+- **Chat**: Real-world application dengan **broadcast messaging** (Client bisa kirim pesan ke client lain via server)
+- **JSON**: Structured message protocol untuk **professional communication**
+
 ## 📁 Struktur Project
 
 ```
@@ -236,41 +254,61 @@ build\bin\tcp_client.exe
 
 ## 📖 Materi Pembelajaran
 
-### 1. TCP Socket Programming
+### 1. TCP Socket Programming (1 Server - 1 Client)
 - Membuat TCP server dan client
 - Connection-oriented communication
 - Reliable data transfer
 - Echo server implementation
+- **Komunikasi**: Server ↔ Client
 
 **Files**: `src/tcp/tcp_server.cpp`, `src/tcp/tcp_client.cpp`
+**Dokumentasi**: [Penjelasan TCP](docs/penjelasan-tcp.md)
 
-### 2. UDP Socket Programming
+### 2. UDP Socket Programming (1 Server - 1 Client)
 - Membuat UDP server dan client
 - Connectionless communication
 - Datagram-based transfer
 - Perbandingan dengan TCP
+- **Komunikasi**: Server ↔ Client (connectionless)
 
 **Files**: `src/udp/udp_server.cpp`, `src/udp/udp_client.cpp`
+**Dokumentasi**: [Penjelasan UDP](docs/penjelasan-udp.md)
 
-### 3. Asynchronous Processing
-- Non-blocking sockets
-- select() untuk multiple clients
-- Concurrent connections handling
+### 3. Asynchronous Processing (1 Server - Multiple Clients)
+- Non-blocking sockets dengan `select()`
+- Handle multiple clients concurrently
+- Concurrent connections tanpa threading
 - Event-driven programming
+- **Komunikasi**: Server ↔ Multiple Clients (TIDAK antar client)
 
 **Files**: `src/async/async_tcp_server.cpp`, `src/async/async_tcp_client.cpp`
+**Dokumentasi**: [Penjelasan Async](docs/penjelasan-async.md)
 
-### 4. Chat Demo (Advanced)
+### 4. Chat Demo (Multi-User dengan Broadcast)
 - Multi-user chat application
-- Broadcast messaging
+- Real-time broadcast messaging
+- Threading di client untuk concurrent I/O
 - Username management
 - Commands (/users, /quit)
 - Join/leave notifications
+- **Komunikasi**: Client A ↔ Server ↔ Client B (broadcast!)
 
 **Files**: `src/examples/chat_demo/chat_server.cpp`, `src/examples/chat_demo/chat_client.cpp`
+**Dokumentasi**: [Penjelasan Threading](docs/penjelasan-threading.md)
 
-### 5. Utility Helpers
-- JSON message helpers
+### 5. JSON Protocol Demo (Structured Messages)
+- Structured message protocol dengan JSON
+- Message types (message, command, response, error)
+- Server commands (/time, /echo, /quit)
+- JSON parsing dan serialization
+- Message delimiters (newline)
+- **Komunikasi**: Server ↔ Client dengan JSON format
+
+**Files**: `src/examples/json_demo/json_server.cpp`, `src/examples/json_demo/json_client.cpp`
+**Dokumentasi**: [Penjelasan JSON](docs/penjelasan-json.md)
+
+### 6. Utility Helpers
+- JSON message helpers (simple parsing)
 - Socket utility functions
 - Common patterns
 
@@ -293,6 +331,7 @@ Available CMake Targets:
 - udp         → Build UDP server + client
 - async       → Build async server + client
 - chat        → Build chat server + client
+- json_demo   → Build JSON server + client
 - all_examples → Build semua programs
 
 Individual Targets:
@@ -300,10 +339,12 @@ Individual Targets:
 - udp_server, udp_client
 - async_server, async_client
 - chat_server, chat_client
+- json_server, json_client
 
 Tasks (Ctrl+Shift+P → "Tasks: Run Task"):
 - CMake: Configure
-- CMake: Build All
+- CMake: Build All (Debug)
+- CMake: Build All (Release)
 - CMake: Build TCP
 - CMake: Build Chat
 - Run: TCP Server
@@ -353,12 +394,19 @@ build.bat
 ## 📚 Dokumentasi
 
 Dokumentasi lengkap tersedia di folder `docs/`:
+
+### Setup Guides
 - **[Setup MSVC](docs/SETUP_MSVC.md)** ⭐ - Setup Visual Studio (MSVC) + VSCode + CMake
 - **[Quick Start VSCode](docs/QUICK_START_VSCODE.md)** - Panduan cepat VSCode untuk pemula
+- **[Launch Configurations](docs/launch-configurations.md)** - Panduan lengkap launch configurations (F5)
+- [Windows Setup](docs/windows-setup.md) - Setup MinGW, VSCode, CMake (alternative)
+
+### Demo Tutorials
 - [Penjelasan TCP](docs/penjelasan-tcp.md) - Tutorial TCP programming
 - [Penjelasan UDP](docs/penjelasan-udp.md) - Tutorial UDP programming
-- [Penjelasan Async](docs/penjelasan-async.md) - Tutorial async/non-blocking
-- [Windows Setup](docs/windows-setup.md) - Setup MinGW, VSCode, CMake (alternative)
+- [Penjelasan Async](docs/penjelasan-async.md) - Tutorial async/non-blocking dengan select()
+- [Penjelasan Threading](docs/penjelasan-threading.md) - Tutorial threading di chat client
+- [Penjelasan JSON](docs/penjelasan-json.md) - Tutorial JSON message protocol
 
 ## 🔍 Troubleshooting
 
@@ -474,45 +522,64 @@ sudo dnf install cmake
 ### 1. TCP Echo Server (Basic)
 ```
 Port: 8080
-Type: Connection-oriented
+Type: Connection-oriented (1 Server - 1 Client)
 Features: Echo messages back to client
+Komunikasi: Server ↔ Client
 ```
 
 ### 2. UDP Echo Server
 ```
 Port: 9000
-Type: Connectionless
+Type: Connectionless (1 Server - 1 Client)
 Features: Echo datagrams
+Komunikasi: Server ↔ Client (connectionless)
 ```
 
-### 3. Async TCP Server
+### 3. Async TCP Server (Non-blocking I/O)
 ```
 Port: 8080
-Type: Multi-client (select())
+Type: Multi-client dengan select() (1 Server - Multiple Clients)
 Features: Handle up to 10 concurrent clients
+Komunikasi: Server ↔ Multiple Clients (tidak ada komunikasi antar client)
 ```
 
 ### 4. Chat Server (Advanced) ⭐
 ```
 Port: 7777
-Type: Multi-user chat
+Type: Multi-user chat with broadcast
 Features:
 - Username registration
-- Broadcast messages to all users
+- Broadcast messages to all users (client-to-client communication!)
 - Join/leave notifications
 - Commands: /users, /quit
+- Real-time messaging dengan threading
 - Timestamp tracking
+Komunikasi: Client A ↔ Server ↔ Client B (broadcast)
+```
+
+### 5. JSON Protocol Server (Structured Messages)
+```
+Port: 9999
+Type: TCP with JSON message format (1 Server - 1 Client)
+Features:
+- JSON message protocol
+- Message types: message, command, response, error
+- Commands: /time, /echo, /quit
+- Structured data exchange
+- Message delimiters (newline)
+Komunikasi: Server ↔ Client dengan JSON format
 ```
 
 ## 📊 Project Statistics
 
 ```
-Total Programs:     8 executables
-Total Source Files: 10 files (8 .cpp + 2 .hpp)
-Total Lines:        2,270+ lines of C++ code
-Documentation:      5 markdown files
+Total Programs:     10 executables (tcp, udp, async, chat, json)
+Total Source Files: 12 files (10 .cpp + 2 .hpp)
+Total Lines:        2,800+ lines of C++ code
+Documentation:      8 markdown files (5 demos + 3 setup guides)
 Build Systems:      CMake (primary), batch script (alternative)
 IDE Support:        VSCode (fully configured)
+Demo Examples:      5 complete examples
 ```
 
 ## 🎓 Learning Resources
