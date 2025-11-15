@@ -1,0 +1,53 @@
+{
+    // CMake settings
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "MinGW Makefiles",
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "Debug"
+    },
+
+    // C++ settings
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.cppStandard": "c++11",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/src/utils"
+    ],
+
+    // Windows-specific (Winsock2)
+    "C_Cpp.default.defines": [
+        "_WIN32"
+    ],
+
+    // File associations
+    "files.associations": {
+        "*.hpp": "cpp",
+        "iostream": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "cstring": "cpp",
+        "winsock2.h": "c",
+        "ws2tcpip.h": "c"
+    },
+
+    // Exclude build artifacts from file explorer
+    "files.exclude": {
+        "**/.git": true,
+        "**/build": true,
+        "**/bin/*.exe": false  // Show executables
+    },
+
+    // Terminal settings
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+
+    // Editor settings
+    "editor.formatOnSave": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+
+    // CMake output
+    "cmake.showSystemKits": true,
+    "cmake.buildBeforeRun": true
+}

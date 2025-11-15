@@ -1,0 +1,133 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-G",
+                "MinGW Makefiles"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Configure project with CMake"
+        },
+        {
+            "label": "CMake: Build All",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--config",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build all targets"
+        },
+        {
+            "label": "CMake: Build TCP",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "tcp"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build TCP server and client only"
+        },
+        {
+            "label": "CMake: Build UDP",
+            "type": "shell",
+            "command": "cmake",
+                "--build",
+                "build",
+                "--target",
+                "udp"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build UDP server and client only"
+        },
+        {
+            "label": "CMake: Build Chat",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "chat"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Build chat server and client"
+        },
+        {
+            "label": "CMake: Clean",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build",
+                "--target",
+                "clean"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Clean build artifacts"
+        },
+        {
+            "label": "Run: TCP Server",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/tcp_server.exe",
+            "group": "none",
+            "problemMatcher": [],
+            "detail": "Run TCP Server"
+        },
+        {
+            "label": "Run: TCP Client",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/tcp_client.exe",
+            "group": "none",
+            "problemMatcher": [],
+            "detail": "Run TCP Client"
+        },
+        {
+            "label": "Run: Chat Server",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/chat_server.exe",
+            "group": "none",
+            "problemMatcher": [],
+            "detail": "Run Chat Server"
+        },
+        {
+            "label": "Run: Chat Client",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/bin/chat_client.exe",
+            "group": "none",
+            "problemMatcher": [],
+            "detail": "Run Chat Client"
+        }
+    ]
+}
