@@ -2,87 +2,99 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug: TCP Server",
-            "type": "cppdbg",
+            "name": "Debug: TCP Server (MSVC)",
+            "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/tcp_server.exe",
+            "program": "${workspaceFolder}/build/Debug/tcp_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "console": "externalTerminal",
             "preLaunchTask": "CMake: Build All"
         },
         {
-            "name": "Debug: TCP Client",
-            "type": "cppdbg",
+            "name": "Debug: TCP Client (MSVC)",
+            "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/tcp_client.exe",
+            "program": "${workspaceFolder}/build/Debug/tcp_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "console": "externalTerminal",
             "preLaunchTask": "CMake: Build All"
         },
         {
-            "name": "Debug: Chat Server",
-            "type": "cppdbg",
+            "name": "Debug: Chat Server (MSVC)",
+            "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/chat_server.exe",
+            "program": "${workspaceFolder}/build/Debug/chat_server.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "console": "externalTerminal",
             "preLaunchTask": "CMake: Build All"
         },
         {
-            "name": "Debug: Chat Client",
-            "type": "cppdbg",
+            "name": "Debug: Chat Client (MSVC)",
+            "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/chat_client.exe",
+            "program": "${workspaceFolder}/build/Debug/chat_client.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All"
+        },
+        {
+            "name": "Debug: UDP Server (MSVC)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/udp_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All"
+        },
+        {
+            "name": "Debug: UDP Client (MSVC)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/udp_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All"
+        },
+        {
+            "name": "Debug: Async Server (MSVC)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/async_server.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
+            "preLaunchTask": "CMake: Build All"
+        },
+        {
+            "name": "Debug: Async Client (MSVC)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/async_client.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal",
             "preLaunchTask": "CMake: Build All"
         }
     ]

@@ -2,7 +2,7 @@
     // CMake settings
     "cmake.configureOnOpen": true,
     "cmake.buildDirectory": "${workspaceFolder}/build",
-    "cmake.generator": "MinGW Makefiles",
+    // Auto-detect generator (MinGW Makefiles atau Visual Studio)
     "cmake.configureSettings": {
         "CMAKE_BUILD_TYPE": "Debug"
     },
