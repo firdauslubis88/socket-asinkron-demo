@@ -1,11 +1,17 @@
 {
     // CMake settings
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": false,  // Disable auto-configure to prevent kit issues
     "cmake.buildDirectory": "${workspaceFolder}/build",
     // Auto-detect generator (MinGW Makefiles atau Visual Studio)
     "cmake.configureSettings": {
         "CMAKE_BUILD_TYPE": "Debug"
     },
+    // Prefer Visual Studio generator when available
+    "cmake.preferredGenerators": [
+        "Visual Studio 17 2022",
+        "Visual Studio 16 2019",
+        "Visual Studio 15 2017"
+    ],
 
     // C++ settings
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
